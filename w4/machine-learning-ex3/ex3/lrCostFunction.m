@@ -37,6 +37,19 @@ grad = zeros(size(theta));
 %
 
 
+pred = sigmoid(X * theta)
+
+reg_param_cost = lambda / (2 * m) * sum(theta(2:end) .^ 2)
+
+J = 1 / m * sum((-y) .* log(pred) - (1 - y) .* log(1 - pred)) ...
+  + reg_param_cost
+
+reg_param_grad = lambda / m * theta
+reg_param_grad(1) = 0
+
+er = pred - y
+
+grad = 1 / m * (er' * X)' + reg_param_grad
 
 
 
