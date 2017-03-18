@@ -64,9 +64,11 @@ Theta2_grad = zeros(size(Theta2));
 
 a1 = X';
 a1 = [ones(1, size(a1, 2)); a1];
-a2 = sigmoid(Theta1 * a1);
+z2 = Theta1 * a1;
+a2 = sigmoid(z2);
 a2 = [ones(1, size(a2, 2)); a2];
-a3 = sigmoid(Theta2 * a2);
+z3 = Theta2 * a2;
+a3 = sigmoid(z3);
 
 % predictions matrix. columns correspond to different training 
 % examples, j-th row in i-th example/column represents a kind of
@@ -94,6 +96,16 @@ reg_term = lambda / (2 * m) * (sum(sum(Theta1_reg)) ...
 J += reg_term;
 
 % -------------------------------------------------------------
+
+% backpropagation algorithm
+
+d3 = zeros(size(a3, 1), size(a3, 2));
+d3 = a3 - yt;
+
+d2 = Theta2' * d3 .* sigmoidGradient(z2);
+
+delta_1 = d2 * a1'
+delta_2 = d3 * a2'
 
 % =========================================================================
 
