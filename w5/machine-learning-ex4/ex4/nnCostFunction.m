@@ -62,23 +62,36 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+a1 = X';
+a1 = [ones(1, size(a1, 2)); a1];
+a2 = sigmoid(Theta1 * a1);
+a2 = [ones(1, size(a2, 2)); a2];
+a3 = sigmoid(Theta2 * a2);
 
+% predictions matrix. columns correspond to different training 
+% examples, j-th row in i-th example/column represents a kind of
+% "probability" that this example should be categorized as j-th label
 
+pred = a3;
 
+% yt matrix is transformed matrix of expected results y in training set
+% each column contains single 1 value and other values are set to zero.
+% the value of 1 in j-th item (j-th row) of i-th column means that i-th example should be marked with j-th label
 
+yt = zeros(num_labels, m);
+for i=1:m
+  yt(y(i), i) = 1;
+endfor
 
+J = 1 / m * sum(sum((-yt) .* log(pred) - (1 - yt) .* log(1 - pred)));
 
+Theta1_reg = Theta1(:, 2:end) .^ 2;
+Theta2_reg = Theta2(:, 2:end) .^ 2;
 
+reg_term = lambda / (2 * m) * (sum(sum(Theta1_reg)) ...
++ sum(sum(Theta2_reg)));
 
-
-
-
-
-
-
-
-
-
+J += reg_term;
 
 % -------------------------------------------------------------
 
