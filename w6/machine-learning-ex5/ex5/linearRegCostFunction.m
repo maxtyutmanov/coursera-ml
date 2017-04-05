@@ -13,9 +13,15 @@ J = 0;
 grad = zeros(size(theta));
 
 pred = X * theta;
+er = pred - y;
 reg = lambda / (2 * m) * sum(theta(2:end) .^ 2);
 
-J = 1 / (2 * m) * sum((pred - y) .^ 2) + reg;
+J = 1 / (2 * m) * sum(er .^ 2) + reg;
+
+grad_reg = lambda / m * theta;
+grad_reg(1) = 0;
+
+grad = 1 / m * (X' * er) + grad_reg;
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: Compute the cost and gradient of regularized linear 
