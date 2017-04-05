@@ -63,9 +63,11 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 a1 = X';
-z2 = Theta1 * [ones(1, size(a1, 2)); a1];
+a1 = [ones(1, size(a1, 2)); a1];
+z2 = Theta1 * a1;
 a2 = sigmoid(z2);
-z3 = Theta2 * [ones(1, size(a2, 2)); a2];
+a2 = [ones(1, size(a2, 2)); a2];
+z3 = Theta2 * a2;
 a3 = sigmoid(z3);
 
 % predictions matrix. columns correspond to different training 
@@ -97,19 +99,49 @@ J += reg_term;
 
 % backpropagation algorithm
 
-d3 = zeros(size(a3, 1), size(a3, 2));
-d3 = a3 - yt;
+% |Theta1| = 25 x 401 - maps 401 items (including bias unit) into
+% 25 items of hidden layer
+delta1 = zeros(size(Theta1, 1), size(Theta1, 2));
+% |Theta2| = 10 x 26 - maps 26 items (including bias unit) into
+% 10 items of hidden layer
+delta2 = zeros(size(Theta2, 1), size(Theta2, 2));
 
-sizeofTheta2 = size(Theta2)
-sizeofd3 = size(d3)
+for t=1:m
 
-d2 = Theta2' * d3 .* sigmoidGradient([ones(1, size(z2, 2)); z2]);
+  % feedforward using current values of parameter matrices Theta*
+  % |a1| = 401
+  a1 = X(t,:)';
+  a1 = [1; a1];
+  z2 = Theta1 * a1;
+  % |a2| = 26
+  a2 = sigmoid(z2);
+  a2 = [1; a2];
+  % |a3| = 10
+  z3 = Theta2 * a2;
+  a3 = sigmoid(z3);
 
-delta_1 = d2 * a1';
-delta_2 = d3 * a2';
+  % calculate delta vectors
+  % |d3| = 10 x 1
+  d3 = a3 - yt(:,t);
+  % |d2| = 25 x 1 (identical to a2)
+  d2 = Theta2' * d3 .* (a2 .* (1 - a2));
+  d2 = d2(2:end);
 
-Theta1_grad = delta_1 / m;
-Theta2_grad = delta_2 / m;
+  delta1 += d2 * a1';
+  delta2 += d3 * a2';
+
+endfor
+
+Theta1_grad = delta1 / m;
+Theta2_grad = delta2 / m;
+
+Theta1_grad_reg = lambda / m * Theta1;
+Theta1_grad_reg(:, 1) = zeros(size(Theta1, 1), 1);
+Theta2_grad_reg = lambda / m * Theta2;
+Theta2_grad_reg(:, 1) = zeros(size(Theta2, 1), 1);
+
+Theta1_grad += Theta1_grad_reg;
+Theta2_grad += Theta2_grad_reg;
 
 % =========================================================================
 
