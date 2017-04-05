@@ -21,6 +21,16 @@ m = size(X, 1);
 error_train = zeros(m, 1);
 error_val   = zeros(m, 1);
 
+cf = @(X1, y1, theta1, lambda1) linearRegCostFunction(X1, y1, theta1, lambda1);
+
+for train_set_size = 1:m
+    X_train = X(1:train_set_size,:);
+    y_train = y(1:train_set_size);
+    theta = trainLinearReg(X_train, y_train, lambda);
+    error_train(train_set_size) = cf(X_train, y_train, theta, 0);
+    error_val(train_set_size) = cf(Xval, yval, theta, 0);
+endfor
+
 % ====================== YOUR CODE HERE ======================
 % Instructions: Fill in this function to return training errors in 
 %               error_train and the cross validation errors in error_val. 
