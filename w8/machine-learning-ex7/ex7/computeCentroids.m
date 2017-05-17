@@ -28,8 +28,11 @@ centroids = zeros(K, n);
 
 
 
-
-
+for centroid_id = 1:K
+    assigned_X = X(find(idx == centroid_id),:);
+    num_of_assigned_X = size(assigned_X, 1);
+    centroids(centroid_id,:) = sum(assigned_X) / num_of_assigned_X;
+end
 
 
 
