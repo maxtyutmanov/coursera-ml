@@ -40,19 +40,18 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
+pred_Y = X * Theta';
+diff_Y = (pred_Y - Y) .* R;
 
+J = sum(sum(diff_Y .^ 2)) / 2;
 
+for i = 1:num_movies
+  X_grad(i,:) = diff_Y(i,:) * Theta;
+end
 
-
-
-
-
-
-
-
-
-
-
+for j = 1:num_users
+  Theta_grad(j,:) = diff_Y(:,j)' * X;
+end
 
 
 % =============================================================
