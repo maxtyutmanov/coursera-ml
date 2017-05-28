@@ -22,12 +22,11 @@ sigma2 = zeros(n, 1);
 %
 
 
+mu = (sum(X) / m)';
 
-
-
-
-
-
+for feature = 1:n
+  sigma2(feature) = sum((X(:,feature) .- mu(feature)) .^ 2) / m;
+end
 
 
 % =============================================================
