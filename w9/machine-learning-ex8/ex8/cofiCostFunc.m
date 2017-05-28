@@ -44,13 +44,14 @@ pred_Y = X * Theta';
 diff_Y = (pred_Y - Y) .* R;
 
 J = sum(sum(diff_Y .^ 2)) / 2;
+J += (sum(sum(Theta .^ 2)) + sum(sum(X .^ 2))) * (lambda / 2);
 
 for i = 1:num_movies
-  X_grad(i,:) = diff_Y(i,:) * Theta;
+  X_grad(i,:) = diff_Y(i,:) * Theta + lambda * X(i,:);
 end
 
 for j = 1:num_users
-  Theta_grad(j,:) = diff_Y(:,j)' * X;
+  Theta_grad(j,:) = diff_Y(:,j)' * X + lambda * Theta(j,:);
 end
 
 
